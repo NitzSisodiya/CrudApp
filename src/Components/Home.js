@@ -15,11 +15,26 @@ constructor(){
       { id: 2, name: 'Bob', contact: 223344, email: 'bob@gmail.com', gender: 'male' },
       { id: 3, name: 'Carry', contact: 223344, email: 'carry@gmail.com', gender: 'female' },
       { id: 4, name: 'Denver', contact: 223344, email: 'denver@gmail.com', gender: 'male' },
-
+          
     ]  
 };
 }
+
+
+handleInputChange(e) {
+  const { value, name } = e.target;
+  this.setState({ [name]: value });
+}
+
+addFormDataIntoTable = (formData) => {
+  
+  const usersRef = this.state.user;
+  usersRef.push(formData);
+  this.setState({user: usersRef})
+}
+
   render() {
+    console.log("data",this.state.user)
     return (
       <>
         <div className="container-fluid  ">
@@ -27,15 +42,14 @@ constructor(){
             <nav className="p-1 Nav Nav-pills">
               <ul style={{ listStyleType: 'none', display: 'inline-flex' }} >
                 <li style={{padding:'5px'}}> <Link to='/' style={{ textDecoration: 'none' }} >Home</Link>  </li>
-                <li> <Link to='/table' style={{ textDecoration: 'none' }} > User Records</Link> </li>
+                <li style={{padding:'5px'}} > <Link to='/table' style={{ textDecoration: 'none' }} > UserRecords</Link> </li>
               </ul>
             </nav>
             <Routes>
-              <Route path="/table" element={<TableHead />} />
-              <Route path='/form' element={<Form />} />
-              <Route path="/table" element={<Table/>} />
-               
-              <Route  path='/viewData' element={<ViewData />} />
+              <Route path='/table' element={<TableHead />} />
+              <Route path='/form' element={<Form addFormDataIntoTable={this.addFormDataIntoTable} handleInputChange={this.handleInputChange}/>} />
+              <Route path='/table' element={<Table users={this.state.user }/>} />
+              <Route  path='/viewData/:id' element={<ViewData data={this.state.user} />} />             
              
              </Routes>
           </Router>

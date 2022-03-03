@@ -1,90 +1,111 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-
 export default class Form extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-            id:0
+      id: 0,
+      name: '',
+      contact: '',
+      email: '',
+      gender:''    
     };
   }
+
+  // addUser = () => {
+  //   this.setState({
+  //     user: [...this.props.data, this.state]
+  //   })
+  //   console.log(this.state);
+  // }
+
   reset = () => {
     this.setState({
       id: 0,
       name: '',
       contact: '',
       email: '',
-      gender:''
+      gender: ''
     })
   }
-  
- 
-  handleInputId = (id) => { this.setState({ id:id+1 })
-console.log(this.state.id);
-}
+  handleInput = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target
+   
+    // const fieldValue = event.target.value;
+    this.setState({ ...this.state, [name]: value });
+    // const newFormData = { ...this.state };
+    // newFormData[fieldName] = fieldValue;
 
-  handleInputName = (event) => { this.setState({ name: event.target.value }) }
+    // this.setState(newUser)
+  }
 
-  handleInputContact = (event) => { this.setState({ contact: event.target.value }) }
 
-  handleInputEmail = (event) => { this.setState({ email: event.target.value }) }
+  handleInputId = () => { this.setState({ id: 1 }) }
+  // onFormSubmit = () => {
+  //   this.setstate([...this.props, ...this.state])
+  //   console.log(this.setstate)
+  // }
 
-  handleInputGender = (event) => { this.setState({ gender: event.target.value }) }
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const formData ={
+      id:this.state.id,
+      name:this.state.name,
+      email:this.state.email,
+      contact:this.state.contact,
+      gender:this.state.gender      
+    }
+    this.props.addFormDataIntoTable(formData)
+  }
 
-   onFormSubmit= (event) => {
-      
-      };
   render() {
     return (
       <>
         <div>
           <div className="container bg-primary mt-1 p-2 ">
-            <div className="container"> <h1>Fill out the Detiails</h1> </div>
+            <div className="container"> <h1>Fill out the Details</h1> </div>
             <form onSubmit={this.onFormSubmit}  >
-              <div className="mb-3" >
-                <label>User Id:</label> <input type="text" disabled />
-                <button type="button" onClick={this.handleInputName}>Generate Id</button>
-              </div>
+
               <div className="mb-3">
                 <label>Name: </label>
-                <input type='text'
+                <input type='text' name='name'
                   value={this.state.name}
-                  onChange={this.handleInputName}
-                  placeholder="your Name" required />
+                  onChange={this.handleInput}
+                  placeholder="your name" required />
               </div>
               <div className="mb-3">
-                <label>Contact: </label> <input type='Number'
+                <label>Contact: </label> <input type='Number' name='contact'
                   value={this.state.contact}
-                  onChange={this.handleInputContact}
+                  onChange={this.handleInput}
                   placeholder="your contact" required />
               </div>
               <div className="mb-3">
-                <label>E-mail: </label> 
-                <input type='email'
+                <label>E-mail: </label>
+                <input type='email' name='email'
                   value={this.state.email}
-                  onChange={this.handleInputEmail}
+                  onChange={this.handleInput}
                   placeholder="e-mail id" required />
               </div>
               <div className="mb-3">
                 <label>Gender: </label>
+                <input type='text' name='gender'
+                  value={this.state.gender}
+                  onChange={this.handleInput}
+                  placeholder="gender" required />
 
-                <input type='radio' name="gender"  
-                value='male' id="male" checked={this.state.gender==='male'}
-                onChange={this.handleInputGender}/> 
-                <label > Male</label>
 
-                <input type='radio' name="gender"  
-                value='Female' id="Female" checked={this.state.gender==='Female'}
-                 onChange={this.handleInputGender} /> 
-                <label >Female</label>
-               
-                      
+                <div className="mb-3" >
+                  <label>User Id:</label> <input type="text" disabled />
+                  <button type="button" onClick={this.handleInputId}>Generate Id</button>
+                </div>
+
               </div>
 
               <div className="mb-3">
-                <button type="Submit" onClick={this.onFormSubmit}>Submit</button>
+                <button type="Submit" onClick={this.handleSubmit}>Submit</button>
                 <button type="button" onClick={this.reset}>Reset</button>
                 <Link to='/table'> <button type="button" >Cancel</button></Link>
               </div>
@@ -95,4 +116,4 @@ console.log(this.state.id);
     );
   }
 }
-//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
+
