@@ -1,59 +1,61 @@
 import React from "react";
-import { Table } from "react-bootstrap";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
-import Form from './form';
-import TableHead from './tableHead';
-import ViewData from "./viewData";
+import Form from './Form';
+import ViewData from "./ViewData";
+import Table from "./UserTable";
+import EditData from "./EditUser";
 
 export default class Index extends React.Component {
-constructor(){ 
-  super();
-  this.state = {
-    user: [
-      { id: 1, name: 'Alice', contact: 223344, email: 'alice@gmail.com', gender: 'male' },
-      { id: 2, name: 'Bob', contact: 223344, email: 'bob@gmail.com', gender: 'male' },
-      { id: 3, name: 'Carry', contact: 223344, email: 'carry@gmail.com', gender: 'female' },
-      { id: 4, name: 'Denver', contact: 223344, email: 'denver@gmail.com', gender: 'male' },
-          
-    ]  
-};
-}
 
+  constructor() {
+    super();
+    this.state = {
+      user: [
+        { id: 1, name: 'Alice', contact: 223344, email: 'alice@gmail.com', gender: 'male' },
+        { id: 2, name: 'Bob', contact: 223344, email: 'bob@gmail.com', gender: 'male' },
+        { id: 3, name: 'Carry', contact: 223344, email: 'carry@gmail.com', gender: 'female' },
+        { id: 4, name: 'Denver', contact: 223344, email: 'denver@gmail.com', gender: 'male' }
+      ]
+    };
+  }
 
-handleInputChange(e) {
-  const { value, name } = e.target;
-  this.setState({ [name]: value });
-}
+  editUserInfo = (editedData) => {
+    const userEdit = Object.assign(...this.state.user,...editedData);
+    }
 
-addFormDataIntoTable = (formData) => {
-  
-  const usersRef = this.state.user;
-  usersRef.push(formData);
-  this.setState({user: usersRef})
-}
+  addFormDataIntoTable = (formData) => {
+    const usersRef = this.state.user;
+    usersRef.push(formData);
+    this.setState({ user: usersRef })
+  }
+
+  // deleteData = (id) =>{
+    
+  // }
 
   render() {
-    console.log("data",this.state.user)
+    console.log("data", this.state.user)
     return (
       <>
         <div className="container-fluid  ">
           <Router>
             <nav className="p-1 Nav Nav-pills">
               <ul style={{ listStyleType: 'none', display: 'inline-flex' }} >
-                <li style={{padding:'5px'}}> <Link to='/' style={{ textDecoration: 'none' }} >Home</Link>  </li>
-                <li style={{padding:'5px'}} > <Link to='/table' style={{ textDecoration: 'none' }} > UserRecords</Link> </li>
+                <li style={{ padding: '5px' }}> <Link to='/' style={{ textDecoration: 'none' }} >Home</Link>  </li>
+                <li style={{ padding: '5px' }} > <Link to='/table' style={{ textDecoration: 'none' }} > UserRecords</Link> </li>
               </ul>
             </nav>
             <Routes>
-              <Route path='/table' element={<TableHead />} />
-              <Route path='/form' element={<Form addFormDataIntoTable={this.addFormDataIntoTable} handleInputChange={this.handleInputChange}/>} />
-              <Route path='/table' element={<Table users={this.state.user }/>} />
-              <Route  path='/viewData/:id' element={<ViewData data={this.state.user} />} />             
-             
+              <Route path='/form' element={<Form addFormDataIntoTable={this.addFormDataIntoTable} users={this.state.user} />} />
+              <Route path='/table' element={<Table deleteData={this.deleteData} users={this.state.user} />} />
+              <Route path='/viewData/:id' element={<ViewData data={this.state.user} />} />
+              <Route path='/editData/:id' element={ <EditData  data={this.state.user} 
+                      editUserInfo= {this.editUserInfo} 
+               /> } />
              </Routes>
           </Router>
-        </div> 
+        </div>
       </>
     );
   }
