@@ -15,9 +15,7 @@ export default class ViewData extends React.Component {
     this.setState({ id: idMatch })
   }
   
-
   render() {
-
     return (
       <>
         <div>
@@ -29,7 +27,7 @@ export default class ViewData extends React.Component {
                   <div>
                     {
                       this.props.data.filter((items, index) => (items.id === this.state.id)).map((item, index) =>
-                        <ul key={index}>
+                        <ul key = { index } style = {{ listStyleType : 'none'}} >
                           <li> Id : {item.id} </li>
                           <li> Name   : {item.name} </li>
                           <li> E-mail : {item.email} </li>
