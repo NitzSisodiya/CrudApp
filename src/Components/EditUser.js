@@ -15,8 +15,8 @@ export default class EditData extends React.Component {
   }
 
   componentDidMount() {
-    this.props.data
-      .filter((items, index) => items.id === this.state.id)
+    this.props.user
+      .find((items, index) => items.id === this.state.id)
       .map((item) => this.setState(item));
   }
 
