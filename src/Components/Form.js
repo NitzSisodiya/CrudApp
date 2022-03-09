@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link  } from "react-router-dom";
 
 class Form extends React.Component {
   constructor(props) {
@@ -8,28 +8,24 @@ class Form extends React.Component {
     this.state = {
       id: 0,
       name: "",
-      contact: "",
+      contact: { cc: -91, num: "" },
       email: "",
       gender: "",
-      errors: "",
-    };
+      formErrors: {}  
+      };
+      this.initialState = this.state; 
   }
 
   componentDidMount() {
-    if (this.props.isEdit === false) {
-      this.setState({ id: Number(this.props.users.length) });
+    if (!this.props.isEdit) {
+      this.setState({ id: Number(this.props.user.length) });
     } else {
       const userId = Number(window.location.pathname.split("/").slice(-1)[0]);
-      this.setState({
-        id: userId,
-      });
-      const userData = this.props.users.find(
-        (user, index) => user.id === userId
-      );
+      const userData = this.props.user.find((user) => user.id === userId);
       this.setState({
         id: userId,
         name: userData.name,
-        contact: userData.contact,
+        contact: { cc: userData.contact.cc, num: userData.contact.num },
         email: userData.email,
         gender: userData.gender,
       });
@@ -38,32 +34,38 @@ class Form extends React.Component {
 
   reset = () => {
     this.setState({
-      id: this.props.users.length,
+      id: this.props.user.length,
       name: "",
-      contact: "",
+      contact: { cc: -91, num: "" },
       email: "",
       gender: "",
     });
   };
 
-  editedUser = () => {
+  cancel = () => {
+    this.setState({
+      id: this.props.user.length,
+      name: "",
+      contact: { cc: -91, num: "" },
+      email: "",
+      gender: "",
+    });
+  };
+
+  editUser = () => {
     const editedData = [{ ...this.state }];
     console.log("edited data", editedData);
     this.props.editUserInfo(editedData);
   };
 
   handleInput = (event) => {
-    event.preventDefault();
-    const { name, value } = event.target;
-    this.setState({ ...this.state, [name]: value });
-    debugger;
-    this.validate(event, name, value);
-
-    this.setState({
-      [name]: value,
-    });
-  };
-
+    event.preventDefault();    
+    const { name, value } = event.target; 
+    if (name === "num") this.setState({ contact: { cc: -91, num: value } });   
+    this.setState({ [name]: value });
+    };
+ 
+  
   handleInputId = () => {
     this.setState({ id: this.state.id + 1 });
     console.log("id:", this.state.id);
@@ -71,191 +73,199 @@ class Form extends React.Component {
 
   handleSubmit = (event) => {
     const { id, name, contact, gender, email } = this.state;
+    const { num } = contact;
     event.preventDefault();
     const formData = {
       id: id,
       name: name,
       email: email,
-      contact: contact,
+      contact: { cc: -91, num: num },
       gender: gender,
     };
-    this.props.addFormDataIntoTable(formData);
+    // const  =
+    // if (f) {
+    //   if (e) editUserInfo
+    //   else addUser
+    // }
+    this.props.addFormDataIntoTable(formData);  
   };
 
-  //  validate = (event, name, value) => {
-  //     //A function to validate each input values
+  handleFormValidation() {    
+    const { name, email, gender, contact } = this.state;    
+    const { num } = contact;
+    let formErrors = {};    
+    let formIsValid = true;    
 
-  //     switch (name) {
-  //         case "name":
-  //             if(value.length <= 4){
-  //                 // we will set the error state
+    // name     
+    if (!name) {    
+        formIsValid = false;    
+        formErrors["nameErr"] = "Name is required.";    
+    }    
 
-  //                 this.setState({
-  //                     ...this.state.errors,
-  //                     name:'name atleast have 5 letters'
-  //                 })
-  //             }else{
-  //                 // set the error state empty or remove the error for username input
+    //Email    
+    if (!email) {    
+        formIsValid = false;    
+        formErrors["emailErr"] = "Email id is required.";    
+    }    
+    else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {    
 
-  //                 //omit function removes/omits the value from given object and returns a new object
-  //                 let newObj = omit(this.state.errors, "name");
-  //                  this.setState(newObj);
+        formIsValid = false;    
+        formErrors["emailErr"] = "Invalid email id.";    
+    }      
 
-  //             }
-  //             break;
+    //Gender    
+    if (gender === '' || gender === "select") {    
+        formIsValid = false;    
+        formErrors["genderErr"] = "Select gender.";    
+    }    
 
-  //         case "email":
-  //             if(
-  //                 !new RegExp( /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/).test(value)
-  //             ){
-  //                  this.setState({
-  //                     ...this.state.errors,
-  //                     email:'Enter a valid email address'
-  //                 })
-  //             }else{
-
-  //                 let newObj = omit(this.state.errors, "email");
-  //                  this.setState(newObj);
-
-  //             }
-  //         break;
-
-  //         // case 'password':
-  //         //     if(
-  //         //         !new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/).test(value)
-  //         //     ){
-  //         //          this.setState({
-  //         //             ...this.this.state.errors,
-  //         //             password:'Password should contains atleast 8 charaters and containing uppercase,lowercase and numbers'
-  //         //         })
-  //         //     }else{
-
-  //         //         let newObj = omit(this.this.state.errors, "password");
-  //         //          this.setState(newObj);
-
-  //         //     }
-  //         // break;
-
-  //         default:
-  //             break;
-  //     }
-  // }
+    //contact  
+    if (!num) {    
+        formIsValid = false;    
+        formErrors["num"] = "Phone number is required.";    
+    }    
+    else {    
+        var mobPattern = /^(?:(?:\\+|0{0,2})91(\s*[\\-]\s*)?|[0]?)?[789]\d{9}$/;    
+        if (!mobPattern.test(num)) {    
+            formIsValid = false;    
+            formErrors["numErr"] = "Invalid phone number.";    
+        }    
+    }    
+    this.setState({ formErrors: formErrors });    
+    return formIsValid;    
+}   
 
   render() {
     const { id, name, contact, gender, email } = this.state;
+    const { cc, num } = contact;
+    const { nameErr,emailErr, numErr, genderErr} = this.state.formErrors;
     return (
-      <>
-        <div>
-          <div className="container-fluid col-6 bg-info mt-1 p-2 ">
-            <div className="container" style={{ textAlign: "center" }}>
-              {!this.props.isEdit ? <h1> Add User </h1> : <h1> Edit User </h1>}
-            </div>
-            <hr></hr>
-            <form className="form" onSubmit={this.onFormSubmit}>
-              <div className="mb-3 mx-2">
-                <label style={{ marginRight: "17px" }}>Name: </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={name}
-                  onChange={this.handleInput}
-                  placeholder="your name"
-                  required
-                />
-              </div>
-
-              <div className="mb-3 mx-2">
-                <label style={{ marginRight: "7px" }}>Gender: </label>
-                <input
-                  type="text"
-                  name="gender"
-                  value={gender}
-                  onChange={this.handleInput}
-                  placeholder="gender"
-                  required
-                />
-              </div>
-
-              <div className="mb-3 mx-2 ">
-                <label style={{ marginRight: "0px" }}>Contact: </label>{" "}
-                <input
-                  type="Number"
-                  name="contact"
-                  value={contact}
-                  onChange={this.handleInput}
-                  placeholder="your contact"
-                  required
-                />
-              </div>
-
-              <div className="mb-3 mx-2">
-                <label style={{ marginRight: "17px" }}>E-mail: </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={email}
-                  onChange={this.handleInput}
-                  placeholder="e-mail id"
-                  required
-                />
-              </div>
-
-              <div className="mb-3 mx-2">
-                <label style={{ marginRight: "5px" }}>User Id:</label>{" "}
-                <input value={id} type="text" disabled />
-                <button
-                  id="generateBtn"
-                  type="button"
-                  onClick={this.handleInputId}
-                >
-                  Generate Id
-                </button>
-              </div>
-              <div className="mb-3 mx-2">
-                {!this.props.isEdit ? (
-                  <>
-                    <button
-                      type="Submit"
-                      onClick={this.handleSubmit}
-                      style={{ marginRight: "5px" }}
-                    >
-                      <Link
-                        to="/"
-                        style={{ color: "black", textDecoration: "none" }}
-                      >
-                        <span>Submit</span>
-                      </Link>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={this.reset}
-                      style={{ marginRight: "5px" }}
-                    >
-                      Reset
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    type="Submit"
-                    onClick={this.editedUser}
-                    style={{ marginRight: "5px" }}
-                  >
-                    <Link
-                      to="/"
-                      style={{ color: "black", textDecoration: "none" }}
-                    >
-                      <span>Save</span>
-                    </Link>
-                  </button>
-                )}
-                <Link to="/" style={{ color: "black", textDecoration: "none" }}>
-                  <button type="button">Cancel</button>
-                </Link>
-              </div>
-            </form>
-          </div>
+      <div className="container-fluid col-6 bg-info mt-1 p-2 ">
+        <div className="container" style={{ textAlign: "center" }}>
+          {!this.props.isEdit ? <h1> Add User </h1> : <h1> Edit User </h1>}
         </div>
-      </>
+        <hr></hr>
+        <form className="form" onSubmit={this.handleSubmit}>
+          <div className="mb-3 mx-2">
+            <label style={{ marginRight: "17px" }}>Name: </label>
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={this.handleInput}
+              placeholder="your name"
+              required
+              className={nameErr ? 'showError' : ""}
+            />
+            {nameErr &&
+            <div style={{color:'red', paddiingBottom: "10px"}}> {nameErr}</div>
+            }
+          </div>
+
+          <div className="mb-3 mx-2">
+            <label style={{ marginRight: "7px" }}>Gender: </label>
+            <input
+              type="text"
+              name="gender"
+              value={gender}
+              onChange={this.handleInput}
+              placeholder="gender"
+              required
+              className={genderErr ? 'showError' : ""}
+            />
+            {genderErr &&
+            <div style={{color:'red', paddiingBottom: "10px"}}> {genderErr}</div>
+            }
+          </div>
+
+          <div className="mb-3 mx-2 ">
+            <label style={{ marginRight: "0px" }}>Contact: </label>{" "}
+            <input
+              type="Number"
+              name="cc"
+              value={cc}
+              style={{ width: "60px" }}
+              disabled
+            />
+            <input
+              type="Number"
+              name="num"
+              value={num}
+              onChange={this.handleInput}
+              placeholder="your contact"
+              required
+              className={numErr ? 'showError' : ""}
+            />
+            {numErr &&
+            <div style={{color:'red', paddiingBottom: "10px"}}> {numErr}</div>
+            }
+          </div>
+
+          <div className="mb-3 mx-2">
+            <label style={{ marginRight: "17px" }}>E-mail: </label>
+            <input
+              type="email"
+              name="email"
+              value={email}
+              onChange={this.handleInput}
+              placeholder="e-mail id"
+              required
+              className={emailErr ? 'showError' : ""}
+            />
+             {emailErr &&
+            <div style={{color:'red', paddiingBottom: "10px"}}> {emailErr}</div>
+            }
+          </div>
+
+          <div className="mb-3 mx-2">
+            <label style={{ marginRight: "5px" }}>User Id:</label>{" "}
+            <input value={id} type="text" disabled />
+            <button id="generateBtn" type="button" onClick={this.handleInputId}>
+              Generate Id
+            </button>
+          </div>
+          <div className="mb-3 mx-2">
+            {!this.props.isEdit ? (
+              <>
+                <button
+                  type="Submit"
+                  // onClick={ this.handleSubmit }
+                  style={{ marginRight: "5px" }}
+                >
+                  <Link
+                    to="/"
+                    style={{ color: "black", textDecoration: "none" }}
+                  >
+                    <span>Submit</span>
+                  </Link>
+                </button>
+                <button
+                  type="button"
+                  onClick={this.reset}
+                  style={{ marginRight: "5px" }}
+                >
+                  Reset
+                </button>
+              </>
+            ) : (
+              <button
+                type="Submit"
+                onClick={ this.editUser }
+                style={{ marginRight: "5px" }}
+              >
+                <Link to="/" style={{ color: "black", textDecoration: "none" }}>
+                  <span>Save</span>
+                </Link>
+              </button>
+            )}
+            <Link to="/" style={{ color: "black", textDecoration: "none" }}>
+              <button type="button" onClick={this.cancel}>
+                Cancel
+              </button>
+            </Link>
+          </div>
+        </form>
+      </div>
     );
   }
 }

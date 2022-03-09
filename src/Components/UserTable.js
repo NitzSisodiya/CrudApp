@@ -5,7 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { TiPencil } from "react-icons/ti";
 
 function Table(props) {
-  console.log("table data", props.users);
+  console.log("table data", props.user);
   return (
     <>
       <div className="container-fluid m-1">
@@ -21,7 +21,7 @@ function Table(props) {
                 <button
                   className="btn btn-success"
                   type="button"
-                  onClick={() => props.isEditFun(false)}
+                  onClick={() => props.isUserEdit(false)}
                 >
                   Add User
                 </button>
@@ -45,11 +45,14 @@ function Table(props) {
             </tr>
           </thead>
           <tbody>
-            {props.users.map((element, index) => (
+            {props.user.map((element, index) => (
               <tr key={index}>
                 <td> {element.id} </td>
                 <td> {element.name} </td>
-                <td> {element.contact} </td>
+                <td>
+                  {" "}
+                  {element.contact.cc} - {element.contact.num}{" "}
+                </td>
                 <td> {element.email} </td>
                 <td> {element.gender} </td>
                 <td>
@@ -62,7 +65,10 @@ function Table(props) {
                     to={{ pathname: `/form/${element.id}` }}
                     style={{ color: "black", textDecoration: "none" }}
                   >
-                    <button type="button" onClick={() => props.isEditFun(true)}>
+                    <button
+                      type="button"
+                      onClick={() => props.isUserEdit(true)}
+                    >
                       <TiPencil />
                     </button>
                   </Link>
