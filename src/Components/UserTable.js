@@ -4,7 +4,7 @@ import { GrView } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
 import { TiPencil } from "react-icons/ti";
 
-function Table(props) {
+function UserTable(props) {
   console.log("table data", props.user);
   return (
     <>
@@ -89,4 +89,4 @@ function Table(props) {
     </>
   );
 }
-export default Table;
+export default UserTable;

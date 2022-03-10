@@ -29,6 +29,7 @@ class Form extends React.Component {
         email: userData.email,
         gender: userData.gender,
       });
+      document.getElementById('generateBtn').disabled = true;
     }
   }
 
@@ -145,7 +146,7 @@ class Form extends React.Component {
           {!this.props.isEdit ? <h1> Add User </h1> : <h1> Edit User </h1>}
         </div>
         <hr></hr>
-        <form className="form" onSubmit={this.handleSubmit}>
+        <form className="frm" onSubmit={this.handleSubmit}>
           <div className="mb-3 mx-2">
             <label style={{ marginRight: "17px" }}>Name: </label>
             <input
@@ -220,16 +221,16 @@ class Form extends React.Component {
           <div className="mb-3 mx-2">
             <label style={{ marginRight: "5px" }}>User Id:</label>{" "}
             <input value={id} type="text" disabled />
-            <button id="generateBtn" type="button" onClick={this.handleInputId}>
+            <button id="generateBtn" type="button" onClick={this.handleInputId} >
               Generate Id
-            </button>
+            </button >
           </div>
           <div className="mb-3 mx-2">
             {!this.props.isEdit ? (
               <>
                 <button
                   type="Submit"
-                  // onClick={ this.handleSubmit }
+                onClick={ this.handleSubmit }
                   style={{ marginRight: "5px" }}
                 >
                   <Link
