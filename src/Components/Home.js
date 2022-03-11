@@ -41,45 +41,38 @@ class Home extends React.Component {
   }
 
   editUserInfo = (editedData) => {
-    // const edt = [];
-    // this.state.user.map((user) =>
-    //   user.id === editedData[0].id ? edt.push(editedData[0]) : edt.push(user)
-    // );// this.setState({ user: edt });
-    const userBeforeEdit = this.state.user.find(
-      (user) => user.id === editedData[0].id
+    const edt = [];
+    this.state.user.map((user) =>
+      user.id === editedData[0].id ? edt.push(editedData[0]) : edt.push(user)
     );
-    editStateUser(userBeforeEdit);
-
-    function editStateUser(userBeforeEdit) {
-      if (userBeforeEdit.name !== editedData[0].name)
-        userBeforeEdit.name = userBeforeEdit.name.replace(
-          userBeforeEdit.name,
-          editedData[0].name
-        );
-      console.log("updatedField", userBeforeEdit.name);
-
-      if (userBeforeEdit.email !== editedData[0].email)
-        userBeforeEdit.email = userBeforeEdit.email.replace(
-          userBeforeEdit.email,
-          editedData[0].email
-        );
-      console.log("updatedField", userBeforeEdit.email);
-      
-      if (userBeforeEdit.contact.num !== editedData[0].contact.num)
-        userBeforeEdit.contact.num = userBeforeEdit.contact.num.replace(
-          userBeforeEdit.contact.num,
-         editedData[0].contact.num
-        );
-      console.log("updatedField", userBeforeEdit.contact.num);
-
-      // if (userBeforeEdit.gender !== editedData[0].gender)
-      //   userBeforeEdit.gender = userBeforeEdit.gender.replace(
-      //     userBeforeEdit.gender,
-      //     editedData[0].gender
-      //   );
-      // console.log("updatedField", userBeforeEdit.gender);
-    }
+    this.setState({ user: edt });
   };
+  //  method-2
+  // const userBeforeEdit = this.state.user.find(
+  //   (user) => user.id === editedData[0].id
+  // );
+  // editStateUser(userBeforeEdit);
+  // function editStateUser(userBeforeEdit) {
+  //   if (userBeforeEdit.name !== editedData[0].name)
+  //     userBeforeEdit.name = userBeforeEdit.name.replace(
+  //       userBeforeEdit.name,
+  //       editedData[0].name
+  //     );
+  //   if (userBeforeEdit.email !== editedData[0].email)
+  //     userBeforeEdit.email = userBeforeEdit.email.replace(
+  //       userBeforeEdit.email,
+  //       editedData[0].email
+  //     );
+  //   if (userBeforeEdit.contact.num !== editedData[0].contact.num)
+  //     userBeforeEdit.contact.num = userBeforeEdit.contact.num.replace(
+  //       userBeforeEdit.contact.num,
+  //      editedData[0].contact.num
+  //     );
+  // if (userBeforeEdit.gender !== editedData[0].gender)
+  //   userBeforeEdit.gender = userBeforeEdit.gender.replace(
+  //     userBeforeEdit.gender,
+  //     editedData[0].gender
+  //   );
 
   addFormDataIntoTable = (formData) => {
     const usersRef = this.state.user;

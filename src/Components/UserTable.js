@@ -1,11 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 import { Link } from "react-router-dom";
 import { GrView } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
 import { TiPencil } from "react-icons/ti";
 
-function UserTable(props) {
-  console.log("table data", props.user);
+function UserTable({
+  user,
+  isUserEdit,
+  deleteData,
+}) {
+  const [posts, setPost] = useState([])
+    useEffect(() => {
+     axios.get('https://api.stackexchange.com/2.3/posts?order=desc&sort=activity&site=stackoverflow')
+      .then((response) => {
+        if (response && response.data) {
+          const postsData = response.data.items;
+        setPost(postsData)
+        }
+      })
+  }, [])
+
+
+    useEffect(() => {
+      if (posts.length !== 0) console.log('posts updated')
+
+    }, [posts])
+
+  console.log("table data", user);
+  console.log('posts', posts)
+
   return (
     <>
       <div className="container-fluid m-1">
@@ -21,7 +46,7 @@ function UserTable(props) {
                 <button
                   className="btn btn-success"
                   type="button"
-                  onClick={() => props.isUserEdit(false)}
+                  onClick={() => isUserEdit(false)}
                 >
                   Add User
                 </button>
@@ -45,7 +70,7 @@ function UserTable(props) {
             </tr>
           </thead>
           <tbody>
-            {props.user.map((element, index) => (
+            {user.map((element, index) => (
               <tr key={index}>
                 <td> {element.id} </td>
                 <td> {element.name} </td>
@@ -65,21 +90,14 @@ function UserTable(props) {
                     to={{ pathname: `/form/${element.id}` }}
                     style={{ color: "black", textDecoration: "none" }}
                   >
-                    <button
-                      type="button"
-                      onClick={() => props.isUserEdit(true)}
-                    >
-                      <TiPencil />
-                    </button>
+                      <TiPencil  onClick={() => isUserEdit(true)}/>
+                 
                   </Link>
                 </td>
                 <td>
-                  <button
-                    type="button"
-                    onClick={() => props.deleteData(element.id)}
-                  >
-                    <MdDelete />
-                  </button>
+                 
+                    <MdDelete  onClick={() => deleteData(element.id)} />
+                 
                 </td>
               </tr>
             ))}
